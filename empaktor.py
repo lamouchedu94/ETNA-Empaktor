@@ -31,7 +31,6 @@ def compress_file(file_name, algorithm):
             )
 
 
-
 # Fonction pour décompresser un fichier
 def decompress_file(file_name, algorithm):
     if algorithm == "huffman":
@@ -40,7 +39,7 @@ def decompress_file(file_name, algorithm):
         # Lisez le fichier compressé RLE
         with open(file_name, "r") as file:
             encoded_data = file.read()
-        # Décompressez les données RLE
+        # Décompressez les données RLE en utilisant la fonction decode_rle
         decoded_data = rle.decode_rle(encoded_data)
         # Renommez le fichier décompressé avec l'extension appropriée
         with open(file_name + ".decoded", "w") as decompressed_file:
@@ -60,7 +59,6 @@ def decompress_file(file_name, algorithm):
         print("Décompression terminée. Fichier décompressé : " + file_name + ".decoded")
     else:
         raise ValueError("Algorithme de compression non pris en charge : " + algorithm)
-
 
 
 # Parser d'arguments en ligne de commande

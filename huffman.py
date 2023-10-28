@@ -87,47 +87,6 @@ def compress_huffman(chaine):
 def decompress_huffman(codee, dico):
     return decode(codee, dico)
 
-def compress_file(filename):
-    with open(filename, 'r') as file:
-        data = file.read()
-        compressed_data, dico = compress_huffman(data)
-        with open(filename + '.huffman', 'w') as compressed_file:
-            compressed_file.write(compressed_data)
-        # Sauvegardez le dictionnaire pour pouvoir le réutiliser lors de la décompression
-        with open(filename + '.huffman.dico', 'w') as dico_file:
-            for key, value in dico.items():
-                dico_file.write(f"{key}:{value}\n")
-
-def decompress_file(filename):
-    if filename.endswith('.huffman'):
-        # Chargez le dictionnaire
-        dico = {}
-        with open(filename + '.dico', 'r') as dico_file:
-            for line in dico_file:
-                key, value = line.strip().split(':')
-                dico[key] = value
-        with open(filename, 'r') as file:
-            encoded_data = file.read()
-            decoded_data = decompress_huffman(encoded_data, dico)
-            with open(filename + '.decoded', 'w') as decompressed_file:
-                decompressed_file.write(decoded_data)
-    else:
-        print("Fichier non compressé avec Huffman")
-
-def main():
-    parser = argparse.ArgumentParser(description="Empaktor: Compression and Decompression Tool")
-    parser.add_argument("file", help="Input file for compression or decompression")
-    parser.add_argument("--compression", help="Compression algorithm (e.g., rle, huffman, bwt)")
-    parser.add_argument("--extract", action="store_true", help="Extract compressed file")
-
-    args = parser.parse_args()
-
-    if args.extract:
-        decompress_file(args.file)
-        print("File decompressed successfully.")
-    else:
-        compress_file(args.file)
-        print("File compressed successfully.")
-
-if __name__ == "__main__":
-    main()
+data = "aabbbccdddd"
+compressed_data = compress_huffman(data)
+print("Données compressées:", compressed_data)
