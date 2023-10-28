@@ -36,7 +36,15 @@ def decompress_file(file_name, algorithm):
     if algorithm == "huffman":
         return huffman.decompress_huffman(file_name)
     elif algorithm == "rle":
-        return rle.decode_rle(file_name)
+        # Lisez le fichier compressé RLE
+        with open(file_name, "r") as file:
+            encoded_data = file.read()
+        # Décompressez les données RLE en utilisant la fonction decode_rle
+        decoded_data = rle.decode_rle(encoded_data)
+        # Renommez le fichier décompressé avec l'extension appropriée
+        with open(file_name + ".decoded", "w") as decompressed_file:
+            decompressed_file.write(decoded_data)
+        print("Décompression terminée. Fichier décompressé : " + file_name + ".decoded")
     elif algorithm == "bwt":
         # Chargez la clé depuis le fichier
         with open(file_name + ".key", "r") as key_file:
