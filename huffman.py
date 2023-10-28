@@ -1,7 +1,6 @@
-import argparse
 import math
 
-def occurence(chaine):
+def occurrence(chaine):
     dico = {}
     for car in chaine:
         if car in dico:
@@ -59,34 +58,21 @@ def encode(tab, chaine):
 
 def decode(codee, dico):
     enclair = ""
-    while len(codee) > 0:
-        for cles in dico:
-            if codee.startswith(dico[cles]):
-                enclair += cles
-                codee = codee[len(dico[cles]):]
+    code_temp = ""
+    for bit in codee:
+        code_temp += bit
+        for char, code in dico.items():
+            if code == code_temp:
+                enclair += char
+                code_temp = ""
+                break
     return enclair
 
-def initialize_dico(chaine):
-    dico = {}
-    for car in chaine:
-        if car in dico:
-            dico[car] += 1
-        else:
-            dico[car] = 1
-    for char in "ABCDEFGHIJKLMNOPQRSTUVWXYZ .,()":
-        if char not in dico:
-            dico[char] = 0
-    return dico
-
 def compress_huffman(chaine):
-    dico = initialize_dico(chaine)
+    dico = occurrence(chaine)
     tab = n(dico)
-    codee, dico = encode(tab, chaine)
-    return codee, dico
+    codee, coding_dict = encode(tab, chaine)
+    return codee, coding_dict
 
-def decompress_huffman(codee, dico):
-    return decode(codee, dico)
-
-data = "aabbbccdddd"
-compressed_data = compress_huffman(data)
-print("Données compressées:", compressed_data)
+def decompress_huffman(codee, coding_dict):
+    return decode(codee, coding_dict)
