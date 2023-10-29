@@ -5,15 +5,14 @@ import huffman
 import rle
 from burrows_wheeler import transform_bwt, inverse_bwt
 
+
 # Fonction pour compresser un fichier
 def compress_file(file_name, algorithm):
     with open(file_name, "r") as file:
         data = file.read()
         if algorithm == "huffman":
-            compressed_data, coding_dict = huffman.compress_huffman(data)
-            # Transformez la chaîne compressée en bytes
-            compressed_data = compressed_data.encode()
-            return compressed_data, coding_dict
+            codee, dico = huffman.compress_huffman(data)
+            return codee
         elif algorithm == "rle":
             encoded_data = rle.encode_rle(data)
             return encoded_data
@@ -31,16 +30,11 @@ def compress_file(file_name, algorithm):
                 "Algorithme de compression non pris en charge : " + algorithm
             )
 
+
 # Fonction pour décompresser un fichier
 def decompress_file(file_name, algorithm):
     if algorithm == "huffman":
-        with open(file_name, "rb") as file:
-            encoded_data = file.read().decode()  # Lisez la chaîne en bytes
-        decoded_data = huffman.decompress_huffman(encoded_data, coding_dict)
-        # Renommez le fichier décompressé avec l'extension appropriée
-        with open(file_name + ".decoded", "w") as decompressed_file:
-            decompressed_file.write(decoded_data)
-        print("Décompression terminée. Fichier décompressé : " + file_name + ".decoded")
+        return huffman.decompress_huffman(file_name)
     elif algorithm == "rle":
         # Lisez le fichier compressé RLE
         with open(file_name, "r") as file:
@@ -66,6 +60,7 @@ def decompress_file(file_name, algorithm):
     else:
         raise ValueError("Algorithme de compression non pris en charge : " + algorithm)
 
+
 # Parser d'arguments en ligne de commande
 parser = argparse.ArgumentParser(
     description="Empaktor - Compression et décompression de fichiers"
@@ -87,10 +82,11 @@ if args.compression and args.compress:
     archive_name = args.archive
     with tarfile.open(archive_name, "w:gz") as archive:
         for file_name in args.compress:
-            compressed_data, coding_dict = compress_file(file_name, args.compression)
-            # Écrire les données compressées dans le fichier temporaire
+            compressed_data = compress_file(file_name, args.compression)
             with tempfile.NamedTemporaryFile(mode="wb", delete=False) as temp_file:
-                temp_file.write(compressed_data)
+                temp_file.write(
+                    compressed_data.encode()
+                )  # Écrire les données compressées dans le fichier temporaire
             archive.add(temp_file.name, arcname=file_name)
 
     print(f"Compression terminée. Archive créée : {archive_name}")
