@@ -61,19 +61,32 @@ def decompress_file(file_name, algorithm):
         raise ValueError("Algorithme de compression non pris en charge : " + algorithm)
 
 
+# Fonction pour décompresser un fichier
+def extract_files(archive_name):
+    with tarfile.open(archive_name, "r:gz") as archive:
+        archive.extractall()
+
+        # Maintenant, décompressez chaque fichier extrait en utilisant la fonction decompress_file
+        for file_name in archive.getnames():
+            if file_name.endswith(".huffman"):
+                decompress_file(file_name, "huffman")
+            elif file_name.endswith(".rle"):
+                decompress_file(file_name, "rle")
+            elif file_name.endswith(".bwt"):
+                decompress_file(file_name, "bwt")
+                
+
 # Parser d'arguments en ligne de commande
 parser = argparse.ArgumentParser(
     description="Empaktor - Compression et décompression de fichiers"
 )
 parser.add_argument("archive", help="Nom de l'archive compressée")
+parser.add_argument("--extract", action="store_true", help="Extraire un fichier compressé")
 parser.add_argument(
     "--compression", choices=["huffman", "rle", "bwt"], help="Algorithme de compression"
 )
 parser.add_argument("--compress", nargs="+", help="Fichiers à compresser")
 parser.add_argument("--decompress", nargs="*", help="Fichiers à décompresser")
-parser.add_argument(
-    "--extract", action="store_true", help="Extraire un fichier compressé"
-)
 
 args = parser.parse_args()
 
@@ -90,17 +103,10 @@ if args.compression and args.compress:
             archive.add(temp_file.name, arcname=file_name)
 
     print(f"Compression terminée. Archive créée : {archive_name}")
+
 elif args.extract:
-    # Décompression des fichiers si --extract est activé
-    archive_name = args.archive
-    with tarfile.open(archive_name, "r:gz") as archive:
-        archive.extractall()
-        print(f"Décompression terminée. Fichiers extraits.")
-elif args.compression and args.decompress:
-    # Décompression des fichiers spécifiques
-    for file_name in args.decompress:
-        decompress_file(file_name, args.compression)
+    extract_files(args.archive)# Passer "huffman" comme algorithme
+    print(f"Décompression terminée. Fichiers extraits.")
+
 else:
-    print(
-        "Aucune action spécifiée. Utilisez --compression pour compresser, --decompress pour décompresser ou --extract pour extraire un fichier compressé."
-    )
+    print("L'argument --compression est requis pour la décompression. Spécifiez l'algorithme de compression utilisé.")
