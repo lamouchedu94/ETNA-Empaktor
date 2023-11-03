@@ -77,7 +77,7 @@ def inverse_bwt(transformed_data, key):
 `transformed_data` : La transformée de Burrows-Wheeler de la chaîne de caractères.
 `key` : La position de la chaîne de caractères originale dans les rotations.
 
->> Retourne la chaîne de caractère originale.
+=> Retourne la chaîne de caractère originale.
 
 **Exemple d'utilisation**
 ```
