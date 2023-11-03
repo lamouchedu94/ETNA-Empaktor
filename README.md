@@ -4,9 +4,9 @@
 
 Empaktor est un outil de compression et de décompression de fichiers. Il prend en charge trois algorithmes de compression :
 
-* Huffman : un algorithme de compression sans perte qui utilise une table de hachage pour encoder les données.
-* RLE : un algorithme de compression sans perte qui utilise la répétition de séquences de caractères pour réduire la taille des données.
-* BWT : un algorithme de compression sans perte qui utilise la transformée de Burrows-Wheeler pour réorganiser les données.
+* **Huffman** : un algorithme de compression sans perte qui utilise une table de hachage pour encoder les données.
+* **RLE** : un algorithme de compression sans perte qui utilise la répétition de séquences de caractères pour réduire la taille des données.
+* **BWT** : un algorithme de compression sans perte qui utilise la transformée de Burrows-Wheeler pour réorganiser les données.
 
 ### Utilisation
 
