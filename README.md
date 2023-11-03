@@ -12,11 +12,11 @@ Empaktor est un outil de compression et de décompression de fichiers. Il prend 
 
 Empaktor est utilisé via la ligne de commande. Pour compresser un fichier, utilisez la commande suivante :
 
-`empaktor --compress <fichier> [--compression <algorithme>]`
+`python3 empaktor.py <fichier.tar.gz> [--compression <algorithme>] --compress <fichier> `
 
 Par exemple, pour compresser le fichier `fichier.txt` en utilisant l'algorithme **Huffman**, utilisez la commande suivante :
 
-`empaktor --compress fichier.txt --compression huffman`
+`python3 empaktor.py file.tar.gz --compression huffman  --compress fichier.txt `
 
 Pour **décompresser** un fichier, utilisez la commande suivante :
 
