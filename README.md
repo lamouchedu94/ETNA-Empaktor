@@ -2,7 +2,7 @@
 
 ## Introduction
 
-La transformée de Burrows-Wheeler est une transformation d'une chaîne de caractères en une autre chaîne de caractères, qui préserve l'ordre des suffixes de la chaîne originale. Elle est utilisée dans de nombreux algorithmes de compression de données, tels que le Lempel-Ziv-Welch (LZW).
+La transformée de Burrows-Wheeler est une transformation d'une chaîne de caractères en une autre chaîne de caractères, qui préserve l'ordre des suffixes de la chaîne originale.
 
 ### Algorithme
 L'algorithme de la transformée de Burrows-Wheeler est le suivant :
