@@ -1,39 +1,96 @@
-Transformation de Burrows-Wheeler (transform_bwt)
+# Transformée de Burrows-Wheeler
 
-Prototype:
-def transform_bwt(data: str) -> Tuple[str, int]:
+## Introduction
 
-Paramètres:
-data (str): La chaîne de caractères à transformer.
+La transformée de Burrows-Wheeler est une transformation d'une chaîne de caractères en une autre chaîne de caractères, qui préserve l'ordre des suffixes de la chaîne originale.
 
-Retour:
-(str) La chaîne de caractères transformée.
-(int) La clé de transformation.
+### Algorithme
+L'algorithme de la transformée de Burrows-Wheeler est le suivant :
 
-Description:
-Cette fonction applique la transformation de Burrows-Wheeler à la chaîne de caractères d'entrée data. La transformation réorganise les caractères de la chaîne en fonction d'une clé de transformation, créant ainsi la chaîne transformée. La fonction renvoie la chaîne transformée et la clé de transformation.
+* On ajoute un caractère de fin unique à la chaîne de caractères originale.
+* On trie les rotations de la chaîne de caractères, c'est-à-dire les chaînes obtenues en faisant pivoter la chaîne originale d'un certain nombre de positions.
+* On prend le dernier caractère de chaque rotation.
+* On renvoie la chaîne composée de ces caractères.
 
-Exemple d'utilisation:
-data = "banana"
-transformed_data, key = transform_bwt(data)
-Inverse de la Transformation de Burrows-Wheeler (inverse_bwt)
+**Prototype**
+```
+def transform_bwt(data):
+    """
+    Transforme une chaîne de caractères en sa transformée de Burrows-Wheeler.
 
-Prototype:
-def inverse_bwt(transformed_data: str, key: int) -> str:
+    Args:
+        data: La chaîne de caractères à transformer.
 
-Paramètres:
-transformed_data (str): La chaîne de caractères transformée.
-key (int): La clé de transformation.
+    Returns:
+        La transformée de Burrows-Wheeler de la chaîne de caractères.
+    """
+```
 
-Retour:
-(str) La chaîne de caractères inversée.
+### Paramètres
 
-Description:
+* data : La chaîne de caractères à transformer.
 
-Cette fonction applique l'inverse de la transformation de Burrows-Wheeler à la chaîne transformée transformed_data en utilisant la clé de transformation key. Elle restaure la chaîne de caractères d'origine à partir de la chaîne transformée.
 
-Exemple d'utilisation:
+### Retour
 
-data = "banana"
-transformed_data, key = transform_bwt(data)
-original_data = inverse_bwt(transformed_data, key)
+* La transformée de Burrows-Wheeler de la chaîne de caractères.
+
+**Exemple d'utilisation**
+```
+>>> from bwt import transform_bwt
+>>> data = "Hello, world!"
+>>> transformed_data, key = transform_bwt(data)
+>>> transformed_data
+'!dlroW ,olleH'
+```
+
+## Description
+
+L'algorithme de **la transformée de Burrows-Wheeler** fonctionne en triant les rotations de la chaîne de caractères originale. Les rotations sont triées en fonction de leur dernier caractère. Le résultat de ce tri est une chaîne de caractères composée des derniers caractères de chaque rotation.
+
+**La transformée de Burrows-Wheeler** est une transformation réversible. Il est possible de retrouver la chaîne originale à partir de sa transformée en utilisant l'algorithme inverse de la transformée de Burrows-Wheeler.
+
+## Algorithme inverse
+L'algorithme inverse de la transformée de Burrows-Wheeler est le suivant :
+
+* On trie la transformée de Burrows-Wheeler.
+* On construit une table contenant les positions de chaque caractère dans la chaîne originale.
+* On insère les caractères de la transformée de Burrows-Wheeler dans la chaîne originale, en utilisant la table pour déterminer la position de chaque caractère.
+
+**Prototype**
+```
+def inverse_bwt(transformed_data, key):
+    """
+    Inverse la transformée de Burrows-Wheeler d'une chaîne de caractères.
+
+    Args:
+        transformed_data: La transformée de Burrows-Wheeler de la chaîne de caractères.
+        key: La position de la chaîne de caractères originale dans les rotations.
+
+    Returns:
+        La chaîne de caractères originale.
+    """
+```
+
+## Paramètres
+
+`transformed_data` : La transformée de Burrows-Wheeler de la chaîne de caractères.
+`key` : La position de la chaîne de caractères originale dans les rotations.
+
+=> Retourne la chaîne de caractère originale.
+
+**Exemple d'utilisation**
+```
+>>> from bwt import inverse_bwt
+>>> transformed_data = "!dlroW ,olleH"
+>>> key = 0
+>>> original_data = inverse_bwt(transformed_data, key)
+>>> original_data
+'Hello, world!'
+```
+
+## Description
+
+L'algorithme inverse de **la transformée de Burrows-Wheeler** fonctionne en triant la transformée de Burrows-Wheeler. Une fois la transformée de Burrows-Wheeler triée, on peut reconstruire la chaîne originale en insérant les caractères de la transformée de Burrows-Wheeler dans la chaîne originale, en utilisant une table pour déterminer la position de chaque caractère.
+
+La table est construite en triant la transformée de Burrows-Wheeler et en stockant la position de chaque caractère dans la chaîne originale.

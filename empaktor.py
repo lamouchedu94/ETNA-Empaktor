@@ -1,5 +1,6 @@
 import argparse
 import tarfile
+import os
 import tempfile
 import huffman
 import rle
@@ -34,39 +35,46 @@ def compress_file(file_name, algorithm):
 # Fonction pour décompresser un fichier
 def decompress_file(file_name, algorithm):
     if algorithm == "huffman":
-        return huffman.decompress_huffman(file_name)
+        with tarfile.open(file_name, "r:gz") as archive:
+            for member in archive.getmembers():
+                if member.isfile() and member.name.endswith(".huffman"):
+                    file_data = archive.extractfile(member).read().decode()
+                    decoded_data = huffman.decompress_huffman(file_data)
+                    output_file_name = os.path.join(os.path.dirname(file_name), member.name)
+                    with open(output_file_name.replace(".huffman", ".txt"), "w") as decompressed_file:
+                        decompressed_file.write(decoded_data)
+                    print("Décompression terminée. Fichier décompressé : " + output_file_name.replace(".huffman", ".txt"))
     elif algorithm == "rle":
-        # Lisez le fichier compressé RLE
-        with open(file_name, "r") as file:
-            encoded_data = file.read()
-        # Décompressez les données RLE en utilisant la fonction decode_rle
-        decoded_data = rle.decode_rle(encoded_data)
-        # Renommez le fichier décompressé avec l'extension appropriée
-        with open(file_name + ".decoded", "w") as decompressed_file:
-            decompressed_file.write(decoded_data)
-        print("Décompression terminée. Fichier décompressé : " + file_name + ".decoded")
+        with tarfile.open(file_name, "r:gz") as archive:
+            for member in archive.getmembers():
+                if member.isfile() and member.name.endswith(".rle"):
+                    file_data = archive.extractfile(member).read().decode()
+                    decoded_data = rle.decode_rle(file_data)
+                    output_file_name = os.path.join(os.path.dirname(file_name), member.name)
+                    with open(output_file_name.replace(".rle", ".txt"), "w") as decompressed_file:
+                        decompressed_file.write(decoded_data)
+                    print("Décompression terminée. Fichier décompressé : " + output_file_name.replace(".rle", ".txt"))
     elif algorithm == "bwt":
-        # Chargez la clé depuis le fichier
-        with open(file_name + ".key", "r") as key_file:
-            key = int(key_file.read())
-        # Chargez les données transformées
-        with open(file_name + ".bwt", "r") as transformed_file:
-            transformed_data = transformed_file.read()
-        original_data = inverse_bwt(transformed_data, key)
-        # Renommez le fichier décompressé avec l'extension appropriée
-        with open(file_name + ".decoded", "w") as decoded_file:
-            decoded_file.write(original_data)
-        print("Décompression terminée. Fichier décompressé : " + file_name + ".decoded")
+        with tarfile.open(file_name, "r:gz") as archive:
+            for member in archive.getmembers():
+                if member.isfile() and member.name.endswith(".bwt"):
+                    file_data = archive.extractfile(member).read().decode()
+                    with open(file_name + ".key", "r") as key_file:
+                        key = int(key_file.read())
+                    original_data = inverse_bwt(file_data, key)
+                    output_file_name = os.path.join(os.path.dirname(file_name), member.name)
+                    with open(output_file_name.replace(".bwt", ".txt"), "w") as decompressed_file:
+                        decompressed_file.write(original_data)
+                    print("Décompression terminée. Fichier décompressé : " + output_file_name.replace(".bwt", ".txt"))
     else:
-        raise ValueError("Algorithme de compression non pris en charge : " + algorithm)
-
+        print("Algorithme de compression non pris en charge : " + algorithm)
 
 # Fonction pour décompresser un fichier
 def extract_files(archive_name):
     with tarfile.open(archive_name, "r:gz") as archive:
         archive.extractall()
 
-        # Maintenant, décompressez chaque fichier extrait en utilisant la fonction decompress_file
+        # décompresser chaque fichier extrait en utilisant la fonction decompress_file
         for file_name in archive.getnames():
             if file_name.endswith(".huffman"):
                 decompress_file(file_name, "huffman")
@@ -105,8 +113,8 @@ if args.compression and args.compress:
     print(f"Compression terminée. Archive créée : {archive_name}")
 
 elif args.extract:
-    extract_files(args.archive)# Passer "huffman" comme algorithme
+    for algo in ["huffman", "rle", "bwt"]:
+        decompress_file(args.archive, algo)
     print(f"Décompression terminée. Fichiers extraits.")
-
 else:
-    print("L'argument --compression est requis pour la décompression. Spécifiez l'algorithme de compression utilisé.")
+    print("L'argument --extract est requis pour la décompression. Spécifiez l'algorithme de compression utilisé.")
