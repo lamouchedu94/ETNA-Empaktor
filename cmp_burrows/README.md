@@ -37,11 +37,18 @@ def transform_bwt(data):
 
 **Exemple d'utilisation**
 ```
->>> from bwt import transform_bwt
->>> data = "Hello, world!"
->>> transformed_data, key = transform_bwt(data)
->>> transformed_data
-'!dlroW ,olleH'
+>from burrows_wheeler import transform_bwt, inverse_bwt
+
+# Exemple 1
+data = "banana"
+transformed_data, key = transform_bwt(data)
+original_data = inverse_bwt(transformed_data, key)
+print("Exemple 1:")
+print("Données d'origine:", data)
+print("Transformée de Burrows-Wheeler:", transformed_data)
+print("Données inversées:", original_data)
+print()
+
 ```
 
 ## Description
@@ -81,12 +88,15 @@ def inverse_bwt(transformed_data, key):
 
 **Exemple d'utilisation**
 ```
->>> from bwt import inverse_bwt
->>> transformed_data = "!dlroW ,olleH"
->>> key = 0
->>> original_data = inverse_bwt(transformed_data, key)
->>> original_data
-'Hello, world!'
+# Exemple 2
+data = "hello"
+transformed_data, key = transform_bwt(data)
+original_data = inverse_bwt(transformed_data, key)
+print("Exemple 2:")
+print("Données d'origine:", data)
+print("Transformée de Burrows-Wheeler:", transformed_data)
+print("Données inversées:", original_data)
+print()
 ```
 
 ## Description
