@@ -2,9 +2,10 @@ import argparse
 import tarfile
 import os
 import tempfile
-import huffman
-import rle
-from burrows_wheeler import transform_bwt, inverse_bwt
+from cmp_huffman import huffman
+from cmp_rle import rle
+from cmp_burrows.burrows_wheeler import transform_bwt, inverse_bwt
+
 
 
 # Fonction pour compresser un fichier
